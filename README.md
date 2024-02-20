@@ -16,7 +16,7 @@ The Event Manager API is developed using Django REST Framework. It supports user
 ### Clone the Repository
 
 ```bash
-git clone https://yourrepository.com/event_manager_project.git &&
+git clone git@github.com:Kucherenko1van/event_manager_project.git &&
 cd event_manager_project
 ```
 
