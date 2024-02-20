@@ -1,6 +1,15 @@
 # Event Manager API
 
 The Event Manager API is developed using Django REST Framework. It supports user registration, authentication with JWT (JSON Web Tokens), event management, and provides a comprehensive filtering system for events.
+## Requirements
+
+- Python v3.10
+- Django v3.2 or newer
+- Django REST Framework
+- djangorestframework-simplejwt for JWT authentication
+
+Ensure you have Python 3.10 installed on your system to work with this project effectively. This version requirement is due to specific language features and library support utilized in the project.
+
 
 ## Features
 
