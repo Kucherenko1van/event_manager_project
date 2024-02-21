@@ -9,7 +9,13 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from events.views import UserCreate, EventViewSet, custom_api_root, register_for_event, unregister_from_event
+from events.views import (
+    UserCreate,
+    EventViewSet,
+    custom_api_root,
+    register_for_event,
+    unregister_from_event,
+)
 
 
 schema_view = get_schema_view(
@@ -18,11 +24,11 @@ schema_view = get_schema_view(
         default_version="v1",
         description="API documentation for Event Manager App",
         terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="contact@eventmanager.local"),
-        license=openapi.License(name="BSD License"),
+        contact=openapi.Contact(email="ivan_kucherenko@ukr.net"),
+        license=openapi.License(name="MIT License"),
     ),
     public=True,
-    permission_classes=(permissions.AllowAny,),
+    permission_classes=[permissions.AllowAny,],
 )
 
 
@@ -48,10 +54,10 @@ urlpatterns = [
         ),
         name="event-detail",
     ),
-    path('events/<int:pk>/register/', register_for_event, name='event-register'),
-    path('events/<int:pk>/unregister/', unregister_from_event, name='event-unregister'),
+    path("events/<int:pk>/register/", register_for_event, name="event-register"),
+    path("events/<int:pk>/unregister/", unregister_from_event, name="event-unregister"),
     path("admin/", admin.site.urls, name="admin"),
-    path("register/", UserCreate.as_view(), name="register"),
+    path("register_user/", UserCreate.as_view(), name="register_user"),
     re_path(
         r"^swagger(?P<format>\.json|\.yaml)$",
         schema_view.without_ui(cache_timeout=0),

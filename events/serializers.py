@@ -16,8 +16,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
-    creator = serializers.ReadOnlyField(source='creator.username')
+    creator = serializers.ReadOnlyField(source="creator.username")
+
     class Meta:
         model = Event
         fields = "__all__"
-        read_only_fields = ('attendees', 'creator')
+        read_only_fields = ("attendees", "creator")

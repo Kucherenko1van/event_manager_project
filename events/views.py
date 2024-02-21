@@ -47,7 +47,7 @@ class EventViewSet(viewsets.ModelViewSet):
         serializer.save(creator=self.request.user)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def register_for_event(request, pk):
     event = get_object_or_404(Event, pk=pk)
@@ -55,7 +55,7 @@ def register_for_event(request, pk):
     return Response({"message": "You have successfully registered for the event."})
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def unregister_from_event(request, pk):
     event = get_object_or_404(Event, pk=pk)
@@ -65,6 +65,7 @@ def unregister_from_event(request, pk):
 
 @api_view(["GET"])
 def custom_api_root(request, format=None):
+    base_url = request.build_absolute_uri("/")[:-1]
     return Response(
         {
             "swagger-ui": {
@@ -92,10 +93,20 @@ def custom_api_root(request, format=None):
                 "methods": ["POST"],
                 "description": "Refresh JWT access token using a refresh token.",
             },
-            "register": {
-                "url": reverse("register", request=request, format=format),
+            "register_user": {
+                "url": reverse("register_user", request=request, format=format),
                 "methods": ["POST"],
                 "description": "Register a new user. POST required user information.",
+            },
+            "event-register": {
+                "url": f"{base_url}/events/{{pk}}/register/",
+                "methods": ["POST"],
+                "description": "Register for an event. Replace {pk} with event ID.",
+            },
+            "event-unregister": {
+                "url": f"{base_url}/events/{{pk}}/unregister/",
+                "methods": ["POST"],
+                "description": "Unregister from an event. Replace {pk} with event ID.",
             },
         }
     )
