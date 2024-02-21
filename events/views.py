@@ -1,13 +1,30 @@
 from rest_framework import status
-from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
 from rest_framework import viewsets
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 
 from .models import Event
 from .filters import EventFilter
 from .serializers import EventSerializer, UserSerializer
+
+from rest_framework import permissions
+
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Custom permission so that only object owners can edit it.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj.creator == request.user
 
 
 class UserCreate(APIView):
@@ -24,6 +41,26 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     filterset_class = EventFilter
+    permission_classes = [IsOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def register_for_event(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    event.attendees.add(request.user)
+    return Response({"message": "You have successfully registered for the event."})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def unregister_from_event(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    event.attendees.remove(request.user)
+    return Response({"message": "You have successfully unregistered from the event."})
 
 
 @api_view(["GET"])

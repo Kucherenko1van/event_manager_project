@@ -9,7 +9,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from events.views import UserCreate, EventViewSet, custom_api_root
+from events.views import UserCreate, EventViewSet, custom_api_root, register_for_event, unregister_from_event
 
 
 schema_view = get_schema_view(
@@ -48,6 +48,8 @@ urlpatterns = [
         ),
         name="event-detail",
     ),
+    path('events/<int:pk>/register/', register_for_event, name='event-register'),
+    path('events/<int:pk>/unregister/', unregister_from_event, name='event-unregister'),
     path("admin/", admin.site.urls, name="admin"),
     path("register/", UserCreate.as_view(), name="register"),
     re_path(
